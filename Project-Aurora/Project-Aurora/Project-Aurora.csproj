@@ -292,6 +292,23 @@
     <Compile Include="Profiles\Generic\GameEvent_Generic.cs" />
     <Compile Include="Profiles\Generic\WrapperProfile.cs" />
     <Compile Include="Profiles\Generic_Application\GenericApplicationSettings.cs" />
+    <Compile Include="Profiles\GTASanAndreas\Control_GTASanAndreas.xaml.cs">
+      <DependentUpon>Control_GTASanAndreas.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\GTASanAndreas\GTASanAndreasGameEvent.cs" />
+    <Compile Include="Profiles\GTASanAndreas\GSI\GTASanAndreasGameState.cs" />
+    <Compile Include="Profiles\GTASanAndreas\GSI\Nodes\Player.cs" />
+    <Compile Include="Profiles\GTASanAndreas\Layers\Control_GTASanAndreasPoliceSirenLayer.xaml.cs">
+      <DependentUpon>Control_GTASanAndreasPoliceSirenLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\GTASanAndreas\Layers\Control_GTASanAndreasBackgroundLayer.xaml.cs">
+      <DependentUpon>Control_GTASanAndreasBackgroundLayer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Profiles\GTASanAndreas\Layers\GTASanAndreasPoliceSirenLayerHandler.cs" />
+    <Compile Include="Profiles\GTASanAndreas\Layers\GTASanAndreasBackgroundLayerHandler.cs" />
+    <Compile Include="Profiles\GTASanAndreas\GTASanAndreasApplication.cs" />
+    <Compile Include="Profiles\GTASanAndreas\GTASanAndreasPointers.cs" />
+    <Compile Include="Profiles\GTASanAndreas\GTASanAndreasProfile.cs" />
     <Compile Include="Settings\Layers\Control_WrapperLightsLayer.xaml.cs">
       <DependentUpon>Control_WrapperLightsLayer.xaml</DependentUpon>
     </Compile>
@@ -1157,6 +1174,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Profiles\GTASanAndreas\Layers\Control_GTASanAndreasPoliceSirenLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Profiles\Guild Wars 2\Control_GW2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1190,6 +1211,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Profiles\Payday 2\Layers\Control_PD2BackgroundLayer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\GTASanAndreas\Control_GTASanAndreas.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Profiles\GTASanAndreas\Layers\Control_GTASanAndreasBackgroundLayer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1530,6 +1559,7 @@
     <Resource Include="Resources\Borderlands2_256x256.png" />
     <Resource Include="Resources\rot_tombraider.png" />
     <Resource Include="Resources\dl_128x128.png" />
+    <Resource Include="Resources\gta_sa_256x256.png" />
     <Content Include="Resources\SteelSeriesInstall\Step1.png" />
     <Content Include="Resources\SteelSeriesInstall\Step2.png" />
     <Content Include="SDKDLL.dll">

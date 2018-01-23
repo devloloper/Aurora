@@ -101,6 +101,7 @@ namespace Aurora.Profiles
                 new Dota_2.Dota2(),
                 new CSGO.CSGO(),
                 new GTA5.GTA5(),
+                new GTASanAndreas.GTASanAndreas(),
                 new RocketLeague.RocketLeague(),
                 new Borderlands2.Borderlands2(),
                 new Overwatch.Overwatch(),

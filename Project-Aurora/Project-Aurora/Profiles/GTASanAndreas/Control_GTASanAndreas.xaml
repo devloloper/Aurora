@@ -1,0 +1,22 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             x:Class="Aurora.Profiles.GTASanAndreas.Control_GTASanAndreas"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" Height="Auto" Width="Auto" d:DesignWidth="850">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Overview for GTA San Andreas">
+                <Grid>
+                    <TextBlock Margin="10,30,0,0" VerticalAlignment="Top" TextWrapping="Wrap" HorizontalAlignment="Left" Width="770"><Run Text="GTA San Andreas support works via memory reading. As a result, you do not have to apply any patches for the game to work with Aurora. This will only work with GTA San Andreas V1.0, not the steam version"/></TextBlock>
+                    <CheckBox x:Name="game_enabled" Content="Enable Aurora to provide lighting effects with GTA San Andreas" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Checked="game_enabled_Checked" Unchecked="game_enabled_Checked"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Preview">
+                <Grid/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
