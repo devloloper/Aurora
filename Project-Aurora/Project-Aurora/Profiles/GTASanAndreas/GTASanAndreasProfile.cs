@@ -20,7 +20,7 @@ namespace Aurora.Profiles.GTASanAndreas
                     Properties = new PercentLayerHandlerProperties
                     {
                         _PrimaryColor = Color.Red,
-                        _SecondaryColor = Color.DarkRed,
+                        _SecondaryColor = Color.Black,
                         _PercentType = PercentEffectType.Progressive_Gradual,
                         _Sequence = new KeySequence(new[]
                         {
@@ -39,7 +39,7 @@ namespace Aurora.Profiles.GTASanAndreas
                     Properties = new PercentLayerHandlerProperties
                     {
                         _PrimaryColor = Color.Azure,
-                        _SecondaryColor = Color.Lavender,
+                        _SecondaryColor = Color.Black,
                         _PercentType = PercentEffectType.Progressive_Gradual,
                         _Sequence = new KeySequence(new[]
                         {

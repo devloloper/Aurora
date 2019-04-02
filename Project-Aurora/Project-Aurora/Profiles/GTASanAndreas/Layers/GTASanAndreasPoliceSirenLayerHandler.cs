@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.Timers;
 using System.Windows.Controls;
 using Aurora.EffectsEngine;
 using Aurora.Profiles.GTA5;
@@ -79,12 +81,12 @@ namespace Aurora.Profiles.GTASanAndreas.Layers
             _LeftSirenColor = Color.FromArgb(255, 0, 0);
             _RightSirenColor = Color.FromArgb(0, 0, 255);
             _SirenType = GTA5_PoliceEffects.Default;
-            _LeftSirenSequence = new KeySequence(new Devices.DeviceKeys[]
+            _LeftSirenSequence = new KeySequence(new[]
             {
                 Devices.DeviceKeys.F1, Devices.DeviceKeys.F2, Devices.DeviceKeys.F3,
                 Devices.DeviceKeys.F4, Devices.DeviceKeys.F5, Devices.DeviceKeys.F6
             });
-            _RightSirenSequence = new KeySequence(new Devices.DeviceKeys[]
+            _RightSirenSequence = new KeySequence(new[]
             {
                 Devices.DeviceKeys.F7, Devices.DeviceKeys.F8, Devices.DeviceKeys.F9,
                 Devices.DeviceKeys.F10, Devices.DeviceKeys.F11, Devices.DeviceKeys.F12
@@ -95,13 +97,14 @@ namespace Aurora.Profiles.GTASanAndreas.Layers
 
     public class GTASanAndreasPoliceSirenLayerHandler : LayerHandler<GTASanAndreasPoliceSirenLayerHandlerProperties>
     {
-        private Color left_siren_color = Color.Empty;
-        private Color right_siren_color = Color.Empty;
         private int siren_keyframe = 0;
+        private int latestIntervalUpdate = 0;
+        private Timer sirenTimer = new Timer(500);
 
         public GTASanAndreasPoliceSirenLayerHandler() : base()
         {
             _ID = "GTASanAndreasPoliceSiren";
+            sirenTimer.Elapsed += (sender, args) => ++siren_keyframe;
         }
 
         protected override UserControl CreateControl()
@@ -112,138 +115,196 @@ namespace Aurora.Profiles.GTASanAndreas.Layers
         public override EffectLayer Render(IGameState state)
         {
             var sirensLayer = new EffectLayer("GTA San Andreas - Police Sirens");
-
-            if (state is GTASanAndreasGameState gameState && gameState.Player.WantedLevel > 0)
+            if (!(state is GTASanAndreasGameState gameState))
             {
-                if (left_siren_color != gameState.LeftSirenColor && right_siren_color != gameState.RightSirenColor)
+                return sirensLayer;
+            }
+            if (gameState.Player.WantedLevel <= 0)
+            {
+                if (sirenTimer.Enabled)
                 {
-                    siren_keyframe++;
+                    sirenTimer.Stop();
                 }
+                return sirensLayer;
+            }
 
-                left_siren_color = gameState.LeftSirenColor;
-                right_siren_color = gameState.RightSirenColor;
-
-                var lefts = Properties.LeftSirenColor;
-                var rights = Properties.RightSirenColor;
-
-                //Switch sirens
-                switch (Properties.SirenType)
+            if (gameState.Player.WantedLevel > 0)
+            {
+                switch (gameState.Player.WantedLevel)
                 {
-                    case GTA5_PoliceEffects.Alt_Full:
-                        switch (siren_keyframe % 2)
+                    case 1:
+                        if (latestIntervalUpdate != 1)
                         {
-                            case 1:
-                                rights = lefts;
-                                break;
-                            default:
-                                lefts = rights;
-                                break;
+                            sirenTimer.Interval = 1000;
+                            latestIntervalUpdate = 1;
                         }
-                        siren_keyframe = siren_keyframe % 2;
-
-                        if (Properties.PeripheralUse)
-                            sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
                         break;
-                    case GTA5_PoliceEffects.Alt_Half:
-                        switch (siren_keyframe % 2)
+                    case 2:
+                        if (latestIntervalUpdate != 2)
                         {
-                            case 1:
-                                rights = lefts;
-                                lefts = Color.Black;
-
-                                if (Properties.PeripheralUse)
-                                    sirensLayer.Set(Devices.DeviceKeys.Peripheral, rights);
-                                break;
-                            default:
-                                lefts = rights;
-                                rights = Color.Black;
-
-                                if (Properties.PeripheralUse)
-                                    sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
-                                break;
+                            sirenTimer.Interval = 800;
+                            latestIntervalUpdate = 2;
                         }
-                        siren_keyframe = siren_keyframe % 2;
                         break;
-                    case GTA5_PoliceEffects.Alt_Full_Blink:
-                        switch (siren_keyframe % 4)
+                    case 3:
+                        if (latestIntervalUpdate != 3)
                         {
-                            case 2:
-                                rights = lefts;
-                                break;
-                            case 0:
-                                lefts = rights;
-                                break;
-                            default:
-                                lefts = Color.Black;
-                                rights = Color.Black;
-                                break;
+                            sirenTimer.Interval = 600;
+                            latestIntervalUpdate = 3;
                         }
-                        siren_keyframe = siren_keyframe % 4;
-
-                        if (Properties.PeripheralUse)
-                            sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
                         break;
-                    case GTA5_PoliceEffects.Alt_Half_Blink:
-                        switch (siren_keyframe % 8)
+                    case 4:
+                        if (latestIntervalUpdate != 4)
                         {
-                            case 6:
-                                rights = lefts;
-                                lefts = Color.Black;
-
-                                if (Properties.PeripheralUse)
-                                    sirensLayer.Set(Devices.DeviceKeys.Peripheral, rights);
-                                break;
-                            case 4:
-                                rights = lefts;
-                                lefts = Color.Black;
-
-                                if (Properties.PeripheralUse)
-                                    sirensLayer.Set(Devices.DeviceKeys.Peripheral, rights);
-                                break;
-                            case 2:
-                                lefts = rights;
-                                rights = Color.Black;
-
-                                if (Properties.PeripheralUse)
-                                    sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
-                                break;
-                            case 0:
-                                lefts = rights;
-                                rights = Color.Black;
-
-                                if (Properties.PeripheralUse)
-                                    sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
-                                break;
-                            default:
-                                rights = Color.Black;
-                                lefts = Color.Black;
-
-                                if (Properties.PeripheralUse)
-                                    sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
-                                break;
+                            sirenTimer.Interval = 400;
+                            latestIntervalUpdate = 4;
                         }
-                        siren_keyframe = siren_keyframe % 8;
+                        break;
+                    case 5:
+                        if (latestIntervalUpdate != 5)
+                        {
+                            sirenTimer.Interval = 200;
+                            latestIntervalUpdate = 5;
+                        }
+                        break;
+                    case 6:
+                        if (latestIntervalUpdate != 6)
+                        {
+                            sirenTimer.Interval = 100;
+                            latestIntervalUpdate = 6;
+                        }
                         break;
                     default:
-                        if (siren_keyframe % 2 == 1)
-                        {
-                            var tempc = rights;
-                            rights = lefts;
-                            lefts = tempc;
-                        }
-                        siren_keyframe = siren_keyframe % 2;
-
-                        if (Properties.PeripheralUse)
-                            sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                        sirenTimer.Interval = 1000;
                         break;
                 }
-
-                sirensLayer.Set(Properties.LeftSirenSequence, lefts);
-                sirensLayer.Set(Properties.RightSirenSequence, rights);
+                if (!sirenTimer.Enabled)
+                {
+                    sirenTimer.Start();
+                }
             }
+
+            var lefts = Properties.LeftSirenColor;
+            var rights = Properties.RightSirenColor;
+
+            //Switch sirens
+            switch (Properties.SirenType)
+            {
+                case GTA5_PoliceEffects.Alt_Full:
+                    switch (siren_keyframe % 2)
+                    {
+                        case 1:
+                            rights = lefts;
+                            break;
+                        default:
+                            lefts = rights;
+                            break;
+                    }
+                    siren_keyframe = siren_keyframe % 2;
+
+                    if (Properties.PeripheralUse)
+                        sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                    break;
+                case GTA5_PoliceEffects.Alt_Half:
+                    switch (siren_keyframe % 2)
+                    {
+                        case 1:
+                            rights = lefts;
+                            lefts = Color.Black;
+
+                            if (Properties.PeripheralUse)
+                                sirensLayer.Set(Devices.DeviceKeys.Peripheral, rights);
+                            break;
+                        default:
+                            lefts = rights;
+                            rights = Color.Black;
+
+                            if (Properties.PeripheralUse)
+                                sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                            break;
+                    }
+                    siren_keyframe = siren_keyframe % 2;
+                    break;
+                case GTA5_PoliceEffects.Alt_Full_Blink:
+                    switch (siren_keyframe % 4)
+                    {
+                        case 2:
+                            rights = lefts;
+                            break;
+                        case 0:
+                            lefts = rights;
+                            break;
+                        default:
+                            lefts = Color.Black;
+                            rights = Color.Black;
+                            break;
+                    }
+                    siren_keyframe = siren_keyframe % 4;
+
+                    if (Properties.PeripheralUse)
+                        sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                    break;
+                case GTA5_PoliceEffects.Alt_Half_Blink:
+                    switch (siren_keyframe % 8)
+                    {
+                        case 6:
+                            rights = lefts;
+                            lefts = Color.Black;
+
+                            if (Properties.PeripheralUse)
+                                sirensLayer.Set(Devices.DeviceKeys.Peripheral, rights);
+                            break;
+                        case 4:
+                            rights = lefts;
+                            lefts = Color.Black;
+
+                            if (Properties.PeripheralUse)
+                                sirensLayer.Set(Devices.DeviceKeys.Peripheral, rights);
+                            break;
+                        case 2:
+                            lefts = rights;
+                            rights = Color.Black;
+
+                            if (Properties.PeripheralUse)
+                                sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                            break;
+                        case 0:
+                            lefts = rights;
+                            rights = Color.Black;
+
+                            if (Properties.PeripheralUse)
+                                sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                            break;
+                        default:
+                            rights = Color.Black;
+                            lefts = Color.Black;
+
+                            if (Properties.PeripheralUse)
+                                sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                            break;
+                    }
+                    siren_keyframe = siren_keyframe % 8;
+                    break;
+                default:
+                    if (siren_keyframe % 2 == 1)
+                    {
+                        var tempc = rights;
+                        rights = lefts;
+                        lefts = tempc;
+                    }
+                    siren_keyframe = siren_keyframe % 2;
+
+                    if (Properties.PeripheralUse)
+                        sirensLayer.Set(Devices.DeviceKeys.Peripheral, lefts);
+                    break;
+            }
+
+            sirensLayer.Set(Properties.LeftSirenSequence, lefts);
+            sirensLayer.Set(Properties.RightSirenSequence, rights);
 
             return sirensLayer;
         }
+
 
         public override void SetApplication(Application profile)
         {
